@@ -19,7 +19,7 @@ python main.py
 ```
 ### 知识库
 仓库内置了 `ai-skills-prompt.txt`。通过使用这个提示词，您就能得到知识库`.json`文件
-[Here is prompt](./ai-skills-prompt.txt)
+- [Here is prompt](./ai-skills-prompt.txt)
 ### 打包
 1.安装`Pyinstaller`通过pip
 
