@@ -10,6 +10,7 @@ from core import (
 )
 
 APP_NAME = "QXEAi"
+MODEL_EXTS = (".qxeai", ".mineai")
 EXAMPLE = """### Python 基础
 -1.什么是列表推导式？
 列表推导式是 Python 中创建列表的简洁语法。
@@ -52,7 +53,7 @@ DATA_DIR = writable_dir(app_dir())
 KB_PATH = os.path.join(DATA_DIR, "qxeai_kb.json")
 
 
-class MineAiApp:
+class QXEAiApp:
     def __init__(self, root):
         self.root = root
         self.root.title(APP_NAME)
@@ -92,7 +93,7 @@ class MineAiApp:
         ttk.Checkbutton(bar, text="清空后导入", variable=self.replace_var).pack(side="left", padx=8)
         ttk.Button(bar, text="解析上方文本并导入", command=self._import_text).pack(side="left")
         ttk.Separator(bar, orient="vertical").pack(side="left", fill="y", padx=10)
-        ttk.Button(bar, text="导出 .mineai", command=self._export_mineai).pack(side="left")
+        ttk.Button(bar, text="导出 .qxeai", command=self._export_model).pack(side="left")
 
         self.text_edit = ScrolledText(frame, wrap="word", font=("Consolas", 10))
         self.text_edit.pack(fill="both", expand=True)
@@ -159,8 +160,8 @@ class MineAiApp:
         path = filedialog.askopenfilename(
             title="选择知识库文件",
             filetypes=[
-                ("QXEAi / 文本", "*.mineai *.md *.markdown *.txt"),
-                ("QXEAi 模型", "*.mineai"),
+                ("QXEAi / 文本", "*.qxeai *.mineai *.md *.markdown *.txt"),
+                ("QXEAi 模型", "*.qxeai *.mineai"),
                 ("文本", "*.md *.markdown *.txt"),
                 ("所有", "*.*"),
             ],
@@ -168,7 +169,7 @@ class MineAiApp:
         if not path:
             return
 
-        if path.lower().endswith(".mineai"):
+        if path.lower().endswith(MODEL_EXTS):
             try:
                 new_entries, meta = load_mineai(path)
             except Exception as e:
@@ -180,7 +181,7 @@ class MineAiApp:
             if not meta.get("checksum_ok", True):
                 if not messagebox.askyesno("校验警告", "校验和不一致，仍要导入？"):
                     return
-            self._merge_entries(new_entries, label=f".mineai（{os.path.basename(path)}）")
+            self._merge_entries(new_entries, label=f".qxeai（{os.path.basename(path)}）")
             return
 
         try:
@@ -275,7 +276,7 @@ class MineAiApp:
             return
         messagebox.showinfo("导入完成", summary)
 
-    def _export_mineai(self):
+    def _export_model(self):
         if not self.entries:
             messagebox.showwarning("提示", "知识库为空，无可导出内容")
             return
@@ -368,7 +369,7 @@ class MineAiApp:
 
 def main():
     root = tk.Tk()
-    MineAiApp(root)
+    QXEAiApp(root)
     root.mainloop()
 
 
