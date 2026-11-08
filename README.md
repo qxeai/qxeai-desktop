@@ -1,5 +1,10 @@
 # qxeai-desktop
 制作自己的 Ai 模型
+
+[![build](https://github.com/qxeai/qxeai-desktop/actions/workflows/build.yml/badge.svg)](https://github.com/qxeai/qxeai-desktop/actions/workflows/build.yml)
+[![python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
+[![platform](https://img.shields.io/badge/platform-windows%20%7C%20macos%20%7C%20linux-lightgrey)]()
+[![license](https://img.shields.io/github/license/qxeai/qxeai-desktop)](LICENSE)
 - > QXEAi 创建的初衷是供代码研究使用。二次分发时请遵守 [LICENSE](./LICENSE)
 - > QXEAi 已创建组织 [qxe-ai](https://github.com/qxe-ai)。仓库代码来源于本仓库
 ### 特性
