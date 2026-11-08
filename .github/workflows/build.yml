@@ -1,0 +1,87 @@
+name: build
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: QXEAi-windows
+          - os: ubuntu-latest
+            artifact: QXEAi-linux
+          - os: macos-latest
+            artifact: QXEAi-macos
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Tk (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y python3-tk tk libtk8.6
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build Windows
+        if: runner.os == 'Windows'
+        run: pyinstaller --noconfirm --onedir --windowed --name QXEAi --collect-all jieba --hidden-import jieba --hidden-import rapidfuzz main.py
+
+      - name: Build macOS
+        if: runner.os == 'macOS'
+        run: pyinstaller --noconfirm --onedir --windowed --name QXEAi --osx-bundle-identifier com.qxeai.app --collect-all jieba --hidden-import jieba --hidden-import rapidfuzz main.py
+
+      - name: Build Linux
+        if: runner.os == 'Linux'
+        run: pyinstaller --noconfirm --onedir --name QXEAi --collect-all jieba --hidden-import jieba --hidden-import rapidfuzz main.py
+
+      - name: Windows Package
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: Compress-Archive -Path dist\QXEAi -DestinationPath QXEAi-windows.zip
+
+      - name: macOS Package
+        if: runner.os == 'macOS'
+        run: ditto -c -k --sequesterRsrc --keepParent dist/QXEAi.app QXEAi-macos.zip
+
+      - name: Linux Package
+        if: runner.os == 'Linux'
+        run: tar -czf QXEAi-linux.tar.gz -C dist QXEAi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: |
+            QXEAi-windows.zip
+            QXEAi-macos.zip
+            QXEAi-linux.tar.gz
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            QXEAi-windows.zip
+            QXEAi-macos.zip
+            QXEAi-linux.tar.gz
+          generate_release_notes: true
