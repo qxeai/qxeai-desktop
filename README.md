@@ -1,5 +1,5 @@
 # qxeai-desktop
-制作自己的 Ai 模型
+制作自己的 Ai 模型.不调用任何大模型、不需要 API Key
 
 [![build](https://github.com/qxeai/qxeai-desktop/actions/workflows/build.yml/badge.svg)](https://github.com/qxeai/qxeai-desktop/actions/workflows/build.yml)
 [![python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
