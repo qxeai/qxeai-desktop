@@ -1,6 +1,7 @@
 # qxeai-desktop
 制作自己的 Ai 模型
 > QXEAi 创建的初衷是供代码研究使用。二次分发时请遵守 [LICENSE](./LICENSE)
+> QXEAi 已创建组织 [qxe-ai](https://github.com/qxe-ai)。仓库代码来源于本仓库
 ### 特性
 - 通过知识库创建自己的Ai 模型
 - 通过导出 `.qxeai` 模型文件以供使用
